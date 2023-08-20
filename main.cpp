@@ -16,36 +16,36 @@ public:
         books[3] = {"Automata",5};
     }
 
-    void display_books() {
+    void display_books(Library&L) {
         cout << "book id| Name |copies available\n";
         for (auto it: books) {
             cout << it.first << "\t\t" << it.second.first << "\t\t" << it.second.second << "\n";
         }
     }
 
-    void display_db() {
+    void display_db(Library &L) {
         cout << "student id| Name |number of books issued\n";
-        for (auto it: db) {
+        for (auto it: L.db) {
             cout << it.first << "\t\t" << it.second.first << "\t\t" << it.second.second << "\n";
         }
     }
 
-    void issue(int id, int stud_id, string name) {
-        if (books.find(id) == books.end() or books[id].second == 0 or db[stud_id].second == 2) {
+    void issue(int id, int stud_id, string name, Library&L) {
+        if (L.books.find(id) == L.books.end() or L.books[id].second == 0 or L.db[stud_id].second == 2) {
             cout << "book not available\n";
             return;
         }
-        books[id].second--;
-        db[stud_id].first = name;
-        db[stud_id].second++;
-        cout << books[id].first << " issued succesfully\nThank you for Using Library services\n";
+        L.books[id].second--;
+        L.db[stud_id].first = name;
+        L.db[stud_id].second++;
+        cout << L.books[id].first << " issued succesfully\nThank you for Using Library services\n";
         return;
     }
 
-    void give_back(int id, int stud_id, string bookname) {
-        books[id].second++;
-        books[id].first = bookname;
-        db[stud_id].second--;
+    void give_back(int id, int stud_id, string bookname, Library &L) {
+        L.books[id].second++;
+        L.books[id].first = bookname;
+        L.db[stud_id].second--;
         cout << "Returned succesfully\nThank you for Using Library services\n";
         return;
     }
@@ -63,7 +63,7 @@ public:
         cin >> name;
         cout << "enter the number of copies\n";
         cin >> copies;
-        if (L.books.find(id) != L.books.end()) {
+        if (L.books.find(id) != L.books.end() and L.books[id].first!=name) {
             cout << "book with similar ID already exists\n";
             return;
         }
@@ -90,7 +90,7 @@ int main() {
             cin >> command;
             switch (command) {
                 case 1 :
-                    L.display_books();
+                    L.display_books(L);
                     break;
                 case 2:
 
@@ -100,7 +100,7 @@ int main() {
                     cin >> stud_id;
                     cout << "enter the id of the book you want\n";
                     cin >> id;
-                    L.issue(id, stud_id, name);
+                    L.issue(id, stud_id, name,L);
                     break;
 
 
@@ -114,7 +114,7 @@ int main() {
                     cin >> id;
                     cout << "enter the name of the book\n";
                     cin >> bookname;
-                    L.give_back(id, stud_id, bookname);
+                    L.give_back(id, stud_id, bookname,L);
                     break;
 
 
@@ -144,11 +144,11 @@ int main() {
                         s.add_book(L);
                         break;
                     case 2 :
-                        s.display_db();
+                        s.display_db(L);
                         break;
 
                     case 3:
-                        s.display_books();
+                        s.display_books(L);
                         break;
 
                     default:
